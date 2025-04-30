@@ -1,0 +1,53 @@
+from collections import deque
+print ("D.Bharath Kumar Reddy 192210216")
+
+goal = '123456780'
+
+def matrix_to_str(matrix):
+    return ''.join(str(cell) for row in matrix for cell in row)
+
+def print_board(state):
+    for i in range(0, 9, 3):
+        print(' '.join(state[i:i+3]))
+    print()
+
+def get_moves(state):
+    i = state.index('0')
+    x, y = divmod(i, 3)
+    directions = {'Up': -3, 'Down': 3, 'Left': -1, 'Right': 1}
+    moves = []
+    for dir, delta in directions.items():
+        j = i + delta
+        if dir == 'Left' and y == 0 or dir == 'Right' and y == 2 or not 0 <= j < 9:
+            continue
+        s = list(state)
+        s[i], s[j] = s[j], s[i]
+        moves.append((dir, ''.join(s)))
+    return moves
+
+def bfs(start, max_steps=5):
+    visited = set()
+    q = deque([('', start, [])])
+    while q:
+        move, state, path = q.popleft()
+        if state == goal or len(path) >= max_steps - 1:
+            print(f"\n Showing first {max_steps} steps:\n")
+            for idx, (m, s) in enumerate(path + [(move, state)], 1):
+                print(f"Step {idx}: {m if m else 'Start'}")
+                print_board(s)
+            return
+        if state in visited: continue
+        visited.add(state)
+        for m in get_moves(state):
+            q.append((m[0], m[1], path + [(move, state)]))
+    print(" No solution found.")
+
+if __name__ == "__main__":
+    print("Enter the 3x3 puzzle (use 0 for blank):")
+    matrix = [list(map(int, input(f"Row {i+1}: ").split())) for i in range(3)]
+    start = matrix_to_str(matrix)
+    if len(start) == 9 and set(start) == set('012345678'):
+        bfs(start, max_steps=5)
+    else:
+        print(" Invalid input. Must include digits 0–8 exactly once.")
+
