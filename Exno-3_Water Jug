@@ -1,0 +1,73 @@
+from collections import deque
+print ("D.Bharath Kumar Reddy 192210216")
+
+# Function to print the path from initial to goal state
+def print_path(parent, goal_state):
+    path = []
+    while goal_state:
+        path.append(goal_state)
+        goal_state = parent.get(goal_state)
+    path.reverse()
+    for step in path:
+        print(f"Jug A: {step[0]}L, Jug B: {step[1]}L")
+    print(f"Total steps: {len(path) - 1}")
+
+# BFS to solve the Water Jug Problem
+def water_jug_bfs(a, b, d):
+    visited = set()
+    parent = {}
+    queue = deque()
+
+    start = (0, 0)
+    queue.append(start)
+    visited.add(start)
+    parent[start] = None
+
+    while queue:
+        curr = queue.popleft()
+        x, y = curr
+
+        if x == d or y == d:
+            print("\nSolution found:")
+            print_path(parent, curr)
+            return
+
+        # Possible next states
+        next_states = set()
+
+        # Fill Jug A
+        next_states.add((a, y))
+
+        # Fill Jug B
+        next_states.add((x, b))
+
+        # Empty Jug A
+        next_states.add((0, y))
+
+        # Empty Jug B
+        next_states.add((x, 0))
+
+        # Pour A -> B
+        transfer = min(x, b - y)
+        next_states.add((x - transfer, y + transfer))
+
+        # Pour B -> A
+        transfer = min(y, a - x)
+        next_states.add((x + transfer, y - transfer))
+
+        for state in next_states:
+            if state not in visited:
+                visited.add(state)
+                parent[state] = curr
+                queue.append(state)
+
+    print("No solution possible.")
+
+# Input from the user
+if __name__ == "__main__":
+    print("Water Jug Problem Solver")
+    a = int(input("Enter capacity of Jug A: "))
+    b = int(input("Enter capacity of Jug B: "))
+    d = int(input("Enter target amount to measure: "))
+    water_jug_bfs(a, b, d)
+
