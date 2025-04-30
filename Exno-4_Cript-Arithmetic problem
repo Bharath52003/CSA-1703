@@ -1,0 +1,24 @@
+from itertools import permutations
+print ("D.Bharath Kumar Reddy 192210216")
+
+def solve(w1, w2, w3):
+    letters = set(w1 + w2 + w3)
+    if len(letters) > 10:
+        print("Too many unique letters (max 10).")
+        return
+    for perm in permutations('0123456789', len(letters)):
+        table = str.maketrans(''.join(letters), ''.join(perm))
+        n1, n2, n3 = w1.translate(table), w2.translate(table), w3.translate(table)
+        if n1[0] == '0' or n2[0] == '0' or n3[0] == '0': continue
+        if int(n1) + int(n2) == int(n3):
+            print(f"\n{n1} + {n2} = {n3}")
+            print("Mapping:", dict(zip(letters, perm)))
+            return
+    print("No solution found.")
+
+if __name__ == "__main__":
+    print("Enter the words for the crypt-arithmetic problem:")
+    w1 = input("Word 1: ").upper()
+    w2 = input("Word 2: ").upper()
+    w3 = input("Result word: ").upper()
+    solve(w1, w2, w3)
