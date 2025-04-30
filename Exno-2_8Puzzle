@@ -1,0 +1,114 @@
+import heapq
+print ("D.Bharath Kumar Reddy 192210216")
+
+goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+
+def flatten(state):
+    return [tile for row in state for tile in row]
+
+def manhattan_distance(start, goal):
+    distance = 0
+    for i in range(3):
+        for j in range(3):
+            val = start[i][j]
+            if val != 0:
+                x, y = divmod(goal.index(val), 3)
+                distance += abs(x - i) + abs(y - j)
+    return distance
+
+class Node:
+    def __init__(self, state, parent=None, move="", depth=0, cost=0):
+        self.state = state
+        self.parent = parent
+        self.move = move
+        self.depth = depth
+        self.cost = cost
+
+    def __lt__(self, other):
+        return (self.cost + self.depth) < (other.cost + other.depth)
+
+def find_zero(state):
+    for i in range(3):
+        for j in range(3):
+            if state[i][j] == 0:
+                return i, j
+
+def get_neighbors(state):
+    x, y = find_zero(state)
+    moves = []
+    directions = {
+        'Up': (x - 1, y),
+        'Down': (x + 1, y),
+        'Left': (x, y - 1),
+        'Right': (x, y + 1)
+    }
+
+    for move, (new_x, new_y) in directions.items():
+        if 0 <= new_x < 3 and 0 <= new_y < 3:
+            new_state = [row[:] for row in state]
+            new_state[x][y], new_state[new_x][new_y] = new_state[new_x][new_y], new_state[x][y]
+            moves.append((move, new_state))
+    return moves
+
+def solve(start_state):
+    goal_flat = flatten(goal_state)
+    start_flat = flatten(start_state)
+
+    start_node = Node(state=start_state, cost=manhattan_distance(start_state, goal_flat))
+    open_set = []
+    heapq.heappush(open_set, start_node)
+    visited = set()
+
+    while open_set:
+        current = heapq.heappop(open_set)
+
+        if flatten(current.state) == goal_flat:
+            return reconstruct_path(current)
+
+        visited.add(tuple(flatten(current.state)))
+
+        for move, new_state in get_neighbors(current.state):
+            if tuple(flatten(new_state)) in visited:
+                continue
+            cost = manhattan_distance(new_state, goal_flat)
+            neighbor = Node(state=new_state, parent=current, move=move, depth=current.depth + 1, cost=cost)
+            heapq.heappush(open_set, neighbor)
+
+    return None
+
+def reconstruct_path(node):
+    path = []
+    while node.parent:
+        path.append(node.move)
+        node = node.parent
+    path.reverse()
+    return path
+
+def get_user_input():
+    print("Enter the 8-puzzle board (3x3) row by row, using 0 for the blank space.")
+    board = []
+    for i in range(3):
+        while True:
+            try:
+                row = input(f"Enter row {i+1} (e.g., 1 2 3): ")
+                row_vals = list(map(int, row.strip().split()))
+                if len(row_vals) != 3:
+                    raise ValueError("Each row must contain exactly 3 numbers.")
+                board.append(row_vals)
+                break
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+    return board
+
+# Run the program
+if __name__ == "__main__":
+    start = get_user_input()
+    solution = solve(start)
+    if solution:
+        print("\nSteps to solve the puzzle:")
+        for step in solution:
+            print(step)
+        print(f"Total moves: {len(solution)}")
+    else:
+        print("No solution found.")
+
