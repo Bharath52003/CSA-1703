@@ -1,0 +1,37 @@
+from itertools import permutations
+print ("D.Bharath Kumar Reddy 192210216")
+
+def tsp(graph, start):
+    cities = list(graph.keys())
+    cities.remove(start)
+    min_cost = float('inf')
+    best_path = []
+    for path in permutations(cities):
+        cost = 0
+        current = start
+        for city in path:
+            cost += graph[current][city]
+            current = city
+        cost += graph[current][start]  # return to start
+        if cost < min_cost:
+            min_cost = cost
+            best_path = [start] + list(path) + [start]
+    return best_path, min_cost
+
+# Input
+n = int(input("Enter number of cities: "))
+cities = [input(f"Enter city {i+1} name: ") for i in range(n)]
+graph = {city: {} for city in cities}
+print("Enter distance between each pair:")
+for i in range(n):
+    for j in range(n):
+        if i != j:
+            d = int(input(f"{cities[i]} to {cities[j]}: "))
+            graph[cities[i]][cities[j]] = d
+
+start = input("Enter starting city: ")
+path, cost = tsp(graph, start)
+
+print("\nShortest path:", " -> ".join(path))
+print("Total cost:", cost)
+
