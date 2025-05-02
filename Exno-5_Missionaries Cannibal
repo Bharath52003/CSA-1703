@@ -1,0 +1,31 @@
+from collections import deque
+print ("D.Bharath Kumar Reddy 192210216")
+
+def valid(m, c, M, C): return 0 <= m <= M and 0 <= c <= C and (m == 0 or m >= c)
+def next_states(s, M, C):
+    m, c, b = s
+    ops = [(1,0),(2,0),(0,1),(0,2),(1,1)]
+    res = []
+    for dm, dc in ops:
+        if b == 0: nm, nc, nb = m - dm, c - dc, 1
+        else: nm, nc, nb = m + dm, c + dc, 0
+        if valid(nm, nc, M, C) and valid(M - nm, C - nc, M, C):
+            res.append((nm, nc, nb))
+    return res
+
+def bfs(M, C):
+    q = deque([((M, C, 0), [])])
+    visited = set()
+    while q:
+        (m, c, b), path = q.popleft()
+        if (m, c, b) in visited: continue
+        visited.add((m, c, b))
+        new_path = path + [(m, c, b)]
+        if m == 0 and c == 0 and b == 1: return new_path
+        for s in next_states((m, c, b), M, C):
+            q.append((s, new_path))
+
+M, C = int(input("Missionaries: ")), int(input("Cannibals: "))
+sol = bfs(M, C)
+print("\nSteps:\n" + '\n'.join(f"Left: M={m}, C={c} | Right: M={M-m}, C={C-c} | Boat: {'left' if b==0 else 'right'}" for m, c, b in sol))
+
