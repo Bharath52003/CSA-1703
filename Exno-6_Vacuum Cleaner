@@ -1,0 +1,12 @@
+loc = input("Enter initial location (A/B): ").upper()
+print ("D.Bharath Kumar Reddy 192210216")
+a = input("Is Room A dirty? (yes/no): ").lower() == 'yes'
+b = input("Is Room B dirty? (yes/no): ").lower() == 'yes'
+
+print("\nSteps:")
+if loc == 'A':
+    if a: print("Clean A")
+    if b: print("Move to B\nClean B")
+else:
+    if b: print("Clean B")
+    if a: print("Move to A\nClean A")
