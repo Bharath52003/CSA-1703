@@ -1,0 +1,31 @@
+def is_safe(region, color, assignment, neighbors):
+    print ("D.Bharath Kumar Reddy 192210216")
+    return all(assignment.get(n) != color for n in neighbors[region])
+
+def csp(region_list, neighbors, colors, assignment={}):
+    if len(assignment) == len(region_list):
+        return assignment
+    region = [r for r in region_list if r not in assignment][0]
+    for color in colors:
+        if is_safe(region, color, assignment, neighbors):
+            assignment[region] = color
+            result = csp(region_list, neighbors, colors, assignment)
+            if result: return result
+            del assignment[region]
+    return None
+
+# Input
+regions = input("Enter region names (space-separated): ").split()
+colors = input("Enter color options (space-separated): ").split()
+neighbors = {}
+for r in regions:
+    nbrs = input(f"Neighbors of {r} (space-separated): ").split()
+    neighbors[r] = nbrs
+
+solution = csp(regions, neighbors, colors)
+if solution:
+    print("\nColor Assignment:")
+    for region in regions:
+        print(f"{region} -> {solution[region]}")
+else:
+    print("No valid coloring found.")
