@@ -1,0 +1,25 @@
+import heapq
+print ("D.Bharath kumar reddy 192210216")
+
+def a_star(graph, h, start, goal):
+    open_set = [(h[start], 0, start, [start])]
+    while open_set:
+        _, cost, node, path = heapq.heappop(open_set)
+        if node == goal:
+            return path, cost
+        for neigh, w in graph.get(node, []):
+            heapq.heappush(open_set, (cost + w + h[neigh], cost + w, neigh, path + [neigh]))
+    return [], float('inf')
+
+# Example usage
+graph = {
+    'A': [('B', 1), ('C', 4)],
+    'B': [('D', 6)],
+    'C': [('D', 3)],
+    'D': []
+}
+heuristic = {'A': 7, 'B': 6, 'C': 2, 'D': 0}
+
+path, cost = a_star(graph, heuristic, 'A', 'D')
+print("Path:", ' -> '.join(path))
+print("Total cost:", cost)
