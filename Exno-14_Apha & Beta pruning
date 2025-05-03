@@ -1,0 +1,35 @@
+def alpha_beta(tree, depth, index, is_max, alpha, beta):
+    if depth == 3:
+        print(f"Reached leaf node: {tree[index]}")
+        return tree[index]
+
+    if is_max:
+        max_eval = float('-inf')
+        for i in range(2):
+            val = alpha_beta(tree, depth + 1, index * 2 + i, False, alpha, beta)
+            max_eval = max(max_eval, val)
+            alpha = max(alpha, val)
+            print(f"Max: depth={depth}, index={index}, alpha={alpha}, beta={beta}")
+            if beta <= alpha:
+                print("Pruning at Max node")
+                break
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for i in range(2):
+            val = alpha_beta(tree, depth + 1, index * 2 + i, True, alpha, beta)
+            min_eval = min(min_eval, val)
+            beta = min(beta, val)
+            print(f"Min: depth={depth}, index={index}, alpha={alpha}, beta={beta}")
+            if beta <= alpha:
+                print("Pruning at Min node")
+                break
+        return min_eval
+
+# Example binary tree leaf nodes (2^3 = 8 leaves)
+tree = [3, 5, 6, 9, 1, 2, 0, -1]
+
+# Run the algorithm
+result = alpha_beta(tree, 0, 0, True, float('-inf'), float('inf'))
+print("\n✅ Optimal value using Alpha-Beta Pruning:", result)
+
