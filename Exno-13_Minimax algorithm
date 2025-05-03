@@ -1,0 +1,34 @@
+def minimax(n, is_maximizing):
+    if n <= 0:
+        return -1 if is_maximizing else 1
+    scores = []
+    for pick in [1, 2]:
+        if n - pick >= 0:
+            scores.append(minimax(n - pick, not is_maximizing))
+    return max(scores) if is_maximizing else min(scores)
+
+def best_move(n):
+    for pick in [1, 2]:
+        if minimax(n - pick, False) == 1:
+            return pick
+    return 1
+
+# Game starts with 10 numbers
+n = 10
+print("Game: Pick 1 or 2 numbers per turn. Last to pick wins.")
+while n > 0:
+    print(f"\nNumbers remaining: {n}")
+    player = int(input("Your move (1 or 2): "))
+    if player not in [1, 2] or player > n:
+        print("Invalid move!")
+        continue
+    n -= player
+    if n == 0:
+        print("You win!")
+        break
+    comp = best_move(n)
+    print(f"Computer picks: {comp}")
+    n -= comp
+    if n == 0:
+        print("Computer wins!")
+        break
