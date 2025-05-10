@@ -1,0 +1,34 @@
+% Facts: gender
+% D.Bharath Kumar Reddy(192210216).
+male(john).
+male(bob).
+male(mike).
+
+female(mary).
+female(susan).
+female(lisa).
+
+% Facts: parent(Parent, Child)
+parent(john, bob).
+parent(mary, bob).
+parent(john, susan).
+parent(mary, susan).
+parent(bob, mike).
+parent(lisa, mike).
+
+% Rules:
+
+% father(F, C) - F is the father of C
+father(F, C) :- male(F), parent(F, C).
+
+% mother(M, C) - M is the mother of C
+mother(M, C) :- female(M), parent(M, C).
+
+% sibling(X, Y) - X and Y are siblings
+sibling(X, Y) :- parent(P, X), parent(P, Y), X \= Y.
+
+% grandfather(GF, C) - GF is grandfather of C
+grandfather(GF, C) :- male(GF), parent(GF, P), parent(P, C).
+
+% grandmother(GM, C) - GM is grandmother of C
+grandmother(GM, C) :- female(GM), parent(GM, P), parent(P, C).
