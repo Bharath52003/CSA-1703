@@ -1,0 +1,24 @@
+% State: state(MonkeyPos, MonkeyStatus, BoxPos)
+% MonkeyPos: location of monkey (floor or box)
+% MonkeyStatus: hasbanana or hasnothing
+% BoxPos: location of box (middle, corner, etc)
+% D.Bharath Kumar Reddy(192210216).
+
+% Initial state
+initial_state(state(at_door, hasnothing, at_window)).
+
+% Goal state
+goal_state(state(_, hasbanana, _)).
+
+% Action rules
+move(state(at_door, H, B), state(at_window, H, B), go_to_window).
+move(state(at_window, H, B), state(at_middle, H, B), go_to_middle).
+move(state(at_middle, H, at_window), state(at_middle, H, at_middle), push_box).
+move(state(at_middle, hasnothing, at_middle), state(on_box, hasnothing, at_middle), climb_box).
+move(state(on_box, hasnothing, at_middle), state(on_box, hasbanana, at_middle), grab_banana).
+
+% Plan from one state to goal state
+plan(State, []) :- goal_state(State).
+plan(State, [Action | Rest]) :-
+    move(State, NewState, Action),
+    plan(NewState, Rest).
