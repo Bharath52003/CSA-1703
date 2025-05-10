@@ -1,0 +1,13 @@
+% hanoi(N, Source, Target, Auxiliary).
+% Move N disks from Source to Target using Auxiliary.
+% D.Bharath Kumar Reddy(192210216).
+
+hanoi(1, A, B, _) :-
+    format('Move disk from ~w to ~w~n', [A, B]).
+
+hanoi(N, A, B, C) :-
+    N > 1,
+    M is N - 1,
+    hanoi(M, A, C, B),
+    hanoi(1, A, B, _),
+    hanoi(M, C, B, A).
