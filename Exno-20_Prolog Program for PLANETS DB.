@@ -1,0 +1,20 @@
+% planet(Name, DistanceFromSunInMillionKm, NumberOfMoons).
+% D.Bharath Kumar Reddy(192210216).
+planet(mercury, 58, 0).
+planet(venus, 108, 0).
+planet(earth, 150, 1).
+planet(mars, 228, 2).
+planet(jupiter, 778, 79).
+planet(saturn, 1430, 83).
+planet(uranus, 2870, 27).
+planet(neptune, 4490, 14).
+
+% Rule: Find planets with more than N moons
+has_more_moons_than(Planet, N) :-
+    planet(Planet, _, Moons),
+    Moons > N.
+
+% Rule: Find planets closer than N million km to the sun
+closer_than(Planet, Distance) :-
+    planet(Planet, D, _),
+    D < Distance.
