@@ -1,0 +1,11 @@
+% person_db.pl
+
+% Facts: person(Name, DOB).
+person(john, '1990-01-15').
+person(mary, '1988-06-23').
+person(sam, '2001-11-05').
+person(lisa, '1995-03-12').
+
+% Rule to get DOB of a person
+get_dob(Name, DOB) :-
+    person(Name, DOB).
