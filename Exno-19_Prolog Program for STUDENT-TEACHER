@@ -1,0 +1,13 @@
+% student(Name, SubjectCode).
+% D.Bharath kumar reddy(192210216).
+student(john, cs101).
+student(mary, cs102).
+student(sam, cs103).
+
+% teacher(Name, SubjectCode).
+teacher(smith, cs101).
+teacher(jones, cs102).
+teacher(lee, cs103).
+
+% Rule: Find teacher of a student
+student_teacher(S, T) :- student(S, C), teacher(T, C).
