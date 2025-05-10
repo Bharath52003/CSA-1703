@@ -1,0 +1,16 @@
+% bird(Name). - Declares which animals are birds
+% D.Bharath Kumar Reddy(192210216).
+bird(sparrow).
+bird(penguin).
+bird(ostrich).
+bird(eagle).
+bird(parrot).
+
+% can't fly - non-flying birds
+cannot_fly(penguin).
+cannot_fly(ostrich).
+
+% Rule: A bird can fly if it's a bird and not in cannot_fly list
+can_fly(Bird) :-
+    bird(Bird),
+    \+ cannot_fly(Bird).
