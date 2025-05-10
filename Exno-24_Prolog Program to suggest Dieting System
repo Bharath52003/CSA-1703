@@ -1,0 +1,11 @@
+% diet(Disease, RecommendedDiet)
+% D.Bharath Kumar Reddy(192210216).
+diet(diabetes, 'Low sugar, high fiber, whole grains, green vegetables').
+diet(hypertension, 'Low salt, high potassium, fruits, vegetables').
+diet(obesity, 'Low fat, high protein, leafy greens, portion control').
+diet(anemia, 'Iron-rich foods, red meat, spinach, legumes').
+diet(cardiac, 'Low cholesterol, omega-3 rich foods, fruits, oats').
+
+% Rule: recommend_diet(Disease, Diet)
+recommend_diet(Disease, Diet) :-
+    diet(Disease, Diet).
