@@ -1,0 +1,44 @@
+% Sample graph: edge(Node1, Node2, Cost)
+% D.Bharath kumar reddy[192210216].
+edge(a, b, 1).
+edge(a, c, 3).
+edge(b, d, 3).
+edge(c, d, 1).
+edge(c, e, 6).
+edge(d, f, 2).
+edge(e, f, 1).
+
+% Heuristic values: h(Node, HeuristicValue)
+h(a, 6).
+h(b, 4).
+h(c, 4).
+h(d, 2).
+h(e, 1).
+h(f, 0).  % Goal node has heuristic 0
+
+% Goal node
+goal(f).
+
+% Best First Search entry point
+best_first_search(Start, Path) :-
+    bfs([[Start]], Path).
+
+% bfs(Queue, Path)
+bfs([[Goal|RestPath]|_], [Goal|RestPath]) :-
+    goal(Goal).
+
+bfs([CurrentPath|OtherPaths], FinalPath) :-
+    CurrentPath = [CurrentNode|_],
+    findall([NextNode|CurrentPath],
+            (edge(CurrentNode, NextNode, _),
+             \+ member(NextNode, CurrentPath)),  % Avoid cycles
+            NewPaths),
+    append(OtherPaths, NewPaths, TempPaths),
+    sort_paths(TempPaths, SortedPaths),
+    bfs(SortedPaths, FinalPath).
+
+% Sort paths based on heuristic of the head node
+sort_paths(Paths, Sorted) :-
+    map_list_to_pairs(path_heuristic, Paths, Pairs),
+    keysort(Pairs, SortedPairs),
+    pairs_values(SortedPairs, Sorted).
