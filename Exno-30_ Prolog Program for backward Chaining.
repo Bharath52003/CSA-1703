@@ -1,0 +1,22 @@
+% --- Base facts ---
+has_job(john).
+pays_bills_on_time(john).
+has_no_debts(john).
+
+% --- Rules ---
+good_credit(Person) :-
+    pays_bills_on_time(Person),
+    has_no_debts(Person).
+
+eligible_for_loan(Person) :-
+    has_job(Person),
+    good_credit(Person).
+
+% --- Query Entry Point ---
+check_loan_eligibility(Person) :-
+    eligible_for_loan(Person),
+    write(Person), write(' is eligible for a loan.'), nl.
+
+check_loan_eligibility(Person) :-
+    \+ eligible_for_loan(Person),
+    write(Person), write(' is NOT eligible for a loan.'), nl.
