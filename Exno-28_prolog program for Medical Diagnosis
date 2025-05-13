@@ -1,0 +1,35 @@
+% Define disease based on symptoms
+% D.Bharath Kumar Reddy[192210216].
+disease(flu) :-
+    symptom(fever),
+    symptom(cough).
+
+disease(cold) :-
+    symptom(sneezing),
+    symptom(runny_nose).
+
+% Ask the user for symptoms
+symptom(fever) :-
+    ask('Do you have a fever?').
+
+symptom(cough) :-
+    ask('Do you have a cough?').
+
+symptom(sneezing) :-
+    ask('Are you sneezing?').
+
+symptom(runny_nose) :-
+    ask('Do you have a runny nose?').
+
+% Ask predicate
+ask(Question) :-
+    write(Question), write(' (yes/no): '),
+    read(Response),
+    Response == yes.
+
+% Main diagnosis
+diagnose :-
+    (disease(D) ->
+        write('You may have: '), write(D), nl
+    ;
+        write('Diagnosis is unclear.'), nl).
