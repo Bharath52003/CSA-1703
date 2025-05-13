@@ -1,0 +1,68 @@
+import random
+import math
+
+# Sigmoid activation and its derivative
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+def sigmoid_deriv(x):
+    return x * (1 - x)
+
+# Initialize weights and biases randomly
+def initialize_weights():
+    return {
+        'w1': [[random.uniform(-1, 1), random.uniform(-1, 1)],   # input to hidden (2 neurons)
+               [random.uniform(-1, 1), random.uniform(-1, 1)]],
+        'b1': [random.uniform(-1, 1), random.uniform(-1, 1)],
+        'w2': [random.uniform(-1, 1), random.uniform(-1, 1)],     # hidden to output (1 neuron)
+        'b2': random.uniform(-1, 1)
+    }
+
+# Dot product of vector and weights
+def dot(inputs, weights):
+    return sum(i * w for i, w in zip(inputs, weights))
+
+# XOR Dataset
+X = [[0, 0], [0, 1], [1, 0], [1, 1]]
+Y = [0, 1, 1, 0]
+
+# Initialize parameters
+params = initialize_weights()
+learning_rate = 0.1
+
+# Training loop
+for epoch in range(5000):
+    for i in range(len(X)):
+        x = X[i]
+        y = Y[i]
+
+        # Forward pass
+        z1 = [dot(x, [params['w1'][j][0], params['w1'][j][1]]) + params['b1'][j] for j in range(2)]
+        a1 = [sigmoid(z) for z in z1]
+        z2 = dot(a1, params['w2']) + params['b2']
+        a2 = sigmoid(z2)
+
+        # Error
+        error = y - a2
+
+        # Backpropagation
+        d2 = error * sigmoid_deriv(a2)
+        d1 = [d2 * params['w2'][j] * sigmoid_deriv(a1[j]) for j in range(2)]
+
+        # Update weights and biases
+        for j in range(2):
+            params['w2'][j] += learning_rate * d2 * a1[j]
+            params['w1'][j][0] += learning_rate * d1[j] * x[0]
+            params['w1'][j][1] += learning_rate * d1[j] * x[1]
+            params['b1'][j] += learning_rate * d1[j]
+        params['b2'] += learning_rate * d2
+
+# Testing
+print("\nPredictions:")
+for x in X:
+    z1 = [dot(x, [params['w1'][j][0], params['w1'][j][1]]) + params['b1'][j] for j in range(2)]
+    a1 = [sigmoid(z) for z in z1]
+    z2 = dot(a1, params['w2']) + params['b2']
+    a2 = sigmoid(z2)
+    print(f"{x} => {round(a2, 3)}")
+
