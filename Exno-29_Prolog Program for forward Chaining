@@ -1,0 +1,45 @@
+
+% --- Rules (if -> then) ---
+% D.Bharath Kumar Reddy[192210216].
+rule(eligible_for_loan) :-
+    fact(has_job),
+    fact(good_credit).
+
+rule(good_credit) :-
+    fact(pays_bills_on_time),
+    fact(has_no_debts).
+
+% --- Initial Facts ---
+initial_facts([has_job, pays_bills_on_time, has_no_debts]).
+
+% --- Add initial facts to knowledge base ---
+add_facts([]).
+add_facts([H|T]) :-
+    assertz(fact(H)),
+    add_facts(T).
+
+% --- Forward chaining engine ---
+forward_chain :-
+    findall(NewFact, (rule(NewFact), \+ fact(NewFact)), Facts),
+    add_new_facts(Facts),
+    (Facts = [] -> write('No more facts can be inferred.'), nl ; forward_chain).
+
+% --- Add newly inferred facts ---
+add_new_facts([]).
+add_new_facts([H|T]) :-
+    write('Inferred: '), write(H), nl,
+    assertz(fact(H)),
+    add_new_facts(T).
+
+% --- Run the system ---
+run :-
+    retractall(fact(_)),             % clear old facts
+    initial_facts(Facts),
+    add_facts(Facts),
+    forward_chain,
+    nl,
+    (fact(eligible_for_loan) ->
+        write('✅ Conclusion: Eligible for loan.')
+    ;
+        write('❌ Conclusion: Not eligible for loan.')
+    ), nl.
